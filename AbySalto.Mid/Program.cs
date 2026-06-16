@@ -1,6 +1,7 @@
 
 using AbySalto.Mid.Application;
 using AbySalto.Mid.Infrastructure;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace AbySalto.Mid
 {
@@ -32,6 +33,11 @@ namespace AbySalto.Mid
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors((policyBuilder) =>
+            {
+                policyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
 
             app.UseAuthorization();
 
