@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using AbySalto.Mid.Domain.Abstraction.Networking;
 
 
-public enum Sort
+public enum Order
 {
     Asc,
     Desc
@@ -25,19 +25,24 @@ namespace AbySalto.Mid.Domain.Business.Networking
             this.uriBuilder = new UriBuilderImpl();
             this.uriBuilder.BuildProtocol(true);
             this.uriBuilder.BuildRoot(root);
-            
+
         }
 
-        public string GetUriForPaginationAndSorting(int page, string sortBy, Sort sort)
+        public string GetUriForPaginationAndSorting(int page, string sortBy, Order? sort)
         {
             this.uriBuilder.BuildPath("/products");
+
+            if(sort == null)
+            {
+                sort = Order.Asc;
+            }
 
             int numOfItemsPerPage = 10;
             KeyValuePair<string, string>[] args = [
                     KeyValuePair.Create("limit", $"{numOfItemsPerPage}"),
                     KeyValuePair.Create("skip", $"{numOfItemsPerPage * page}"),
                     KeyValuePair.Create("sortBY", sortBy),
-                    KeyValuePair.Create("order", (sort == Sort.Asc) ? "asc" : "desc")
+                    KeyValuePair.Create("order", (sort == Order.Asc) ? "asc" : "desc")
                 ];
 
             this.uriBuilder.BuildArgs(args);
@@ -45,7 +50,7 @@ namespace AbySalto.Mid.Domain.Business.Networking
             return this.uriBuilder.ReturnFullUri();
         }
 
-        public string GetUriForSearch(string searchValue)
+        public string GetUriForFullSearch(string searchValue)
         {
             this.uriBuilder.BuildPath("/products/search");
             this.uriBuilder.BuildArgs(KeyValuePair.Create("q", searchValue));

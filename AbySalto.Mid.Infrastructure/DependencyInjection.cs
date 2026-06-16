@@ -17,7 +17,7 @@ namespace AbySalto.Mid.Infrastructure
 
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<GetAllProductsClient>();
+            services.AddSingleton<GetFilteredProductsClient>();
             return services;
         }
 

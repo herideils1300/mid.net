@@ -1,4 +1,5 @@
 ﻿using AbySalto.Mid.Application.Networking;
+using AbySalto.Mid.Domain.Business.Networking;
 using Microsoft.Extensions.DependencyInjection;
 namespace AbySalto.Mid.Application
 {
@@ -6,7 +7,8 @@ namespace AbySalto.Mid.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<GetAllProductsClient>();
+            services.AddScoped<GetFilteredProductsClient>();
+            services.AddScoped<UriFactory>();
             return services;
         }
     }

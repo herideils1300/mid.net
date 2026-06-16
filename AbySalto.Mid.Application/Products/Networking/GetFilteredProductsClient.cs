@@ -5,29 +5,26 @@ using AbySalto.Mid.Domain.Business.Conversion;
 using AbySalto.Mid.Domain.Business.Networking;
 using AbySalto.Mid.Domain.Data.Deserialized;
 using AbySalto.Mid.Domain.Data.DTO;
+using AbySalto.Mid.Domain.Data.Model;
 using AbySalto.Mid.Infrastructure.Outbound.Networking;
 using Newtonsoft.Json;
 
 namespace AbySalto.Mid.Application.Networking
 {
-    public class GetAllProductsClient : IClient<ItemDto[]>
+    public class GetFilteredProductsClient : IClient<ItemDto[]>
     {
-        private readonly IMapper<ItemDeserialized, ItemDto> _mapper;
-        public GetAllProductsClient()
+        private readonly IMapper<ItemDeserialized, ItemDto> mapper;
+        private readonly UriFactory _uriFactory;
+        public GetFilteredProductsClient(UriFactory uriFactory)
         {
-            _mapper = new DeserializedToDtoMapper();
+            _uriFactory = uriFactory;
+            mapper = new DeserializedToDtoMapper();
         }
 
-        public async Task<ItemDto[]> SendWithResult(string root, string path, params KeyValuePair<string, string>[] args)
+        public async Task<ItemDto[]> SendWithResult(ParamsModel model)
         {
-            IUriBuilder uriBuilder = new UriBuilderImpl();
 
-            uriBuilder.BuildProtocol(true);
-            uriBuilder.BuildRoot(root);
-            uriBuilder.BuildPath(path);
-            uriBuilder.BuildArgs(args);
-
-            string uri = uriBuilder.ReturnFullUri();
+            string uri = _uriFactory.GetUriForPaginationAndSorting(model.Page, model.SortElements, model.OrderBy);
 
             using (HttpClient client = new HttpClient())
             {
@@ -39,7 +36,7 @@ namespace AbySalto.Mid.Application.Networking
                 string json = Encoding.UTF8.GetString(buffer);
 
                 List<ItemDeserialized> items = JsonConvert.DeserializeObject<Root>(json)?.products ?? throw new Exception("Json unable to deserialize due to validity.");
-                ItemDto[] dtos = items.Select(_mapper.Map).ToArray();
+                ItemDto[] dtos = items.Select(mapper.Map).ToArray();
 
                 return dtos;
 

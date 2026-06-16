@@ -1,25 +1,24 @@
 ﻿using AbySalto.Mid.Application.Networking;
 using AbySalto.Mid.Domain.Data.DTO;
-using AbySalto.Mid.Infrastructure.Outbound.Networking;
-using Microsoft.AspNetCore.Http;
+using AbySalto.Mid.Domain.Data.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbySalto.Mid.WebApi.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ApiProductController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly GetAllProductsClient _client;
-        public ApiProductController(GetAllProductsClient client)
+        private readonly GetFilteredProductsClient _client;
+        public ProductController(GetFilteredProductsClient client)
         {
             _client = client;
         }
 
         [HttpGet]
-        public async Task<ItemDto[]> GetProducts()
+        public async Task<ItemDto[]> GetByParams([FromBody] ParamsModel paramsModel)
         {
-            return await _client.SendWithResult("dummyjson.com", "/products");
+            return await _client.SendWithResult(paramsModel);
         }
     }
 }
