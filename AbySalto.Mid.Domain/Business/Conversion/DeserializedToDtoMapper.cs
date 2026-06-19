@@ -4,12 +4,12 @@ using AbySalto.Mid.Domain.Data.Deserialized;
 
 namespace AbySalto.Mid.Domain.Business.Conversion
 {
-    public class DeserializedToDtoMapper : IMapper<ItemDeserialized, ItemDto>
+    public class DeserializedToDtoMapper : IMapper<ProductDeserialized, ProductDto>
     {
 
-        public ItemDto Map(ItemDeserialized entity)
+        public ProductDto Map(ProductDeserialized entity)
         {
-            ItemDto item = new ItemDto();
+            ProductDto item = new ProductDto();
 
             item.Id = entity.id;
             item.Title = entity.title;

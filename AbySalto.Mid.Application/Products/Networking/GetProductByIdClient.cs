@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AbySalto.Mid.Application.Interfaces.Networking;
 using AbySalto.Mid.Domain.Abstraction.Conversion;
-using AbySalto.Mid.Domain.Abstraction.Networking;
 using AbySalto.Mid.Domain.Business.Conversion;
 using AbySalto.Mid.Domain.Business.Networking;
 using AbySalto.Mid.Domain.Data.Deserialized;
@@ -11,22 +14,21 @@ using Newtonsoft.Json;
 
 namespace AbySalto.Mid.Application.Products.Networking
 {
-    public class GetFilteredProductsClient : IClient<ParamsModel, ProductDto[]>
+    public class GetProductByIdClient : IClient<int, ProductDto>
     {
         private readonly IMapper<ProductDeserialized, ProductDto> mapper;
         private readonly UriFactory _uriFactory;
         private readonly string rootPage = "dummyjson.com";
 
-        public GetFilteredProductsClient()
+        public GetProductByIdClient()
         {
             _uriFactory = new UriFactory(rootPage);
             mapper = new DeserializedToDtoMapper();
         }
 
-        public async Task<ProductDto[]> SendWithResult(ParamsModel model)
+        public async Task<ProductDto> SendWithResult(int id)
         {
-
-            string uri = _uriFactory.GetUriForPaginationAndSorting(model.Page, model.SortElements ?? "title", model.OrderBy);
+            string uri = _uriFactory.GetUriForSingleElement(id);
 
             using (HttpClient client = new HttpClient())
             {
@@ -37,12 +39,13 @@ namespace AbySalto.Mid.Application.Products.Networking
                 bytes.ReadExactly(buffer);
                 string json = Encoding.UTF8.GetString(buffer);
 
-                List<ProductDeserialized> items = JsonConvert.DeserializeObject<Root>(json)?.products ?? throw new Exception("Json unable to deserialize due to validity.");
-                ProductDto[] dtos = items.Select(mapper.Map).ToArray();
+                ProductDeserialized item = JsonConvert.DeserializeObject<ProductDeserialized>(json) ?? throw new Exception("Json unable to deserialize due to validity.");
+                ProductDto dto = mapper.Map(item);
 
-                return dtos;
+                return dto;
 
             }
         }
+
     }
 }

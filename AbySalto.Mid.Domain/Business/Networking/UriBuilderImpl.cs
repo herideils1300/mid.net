@@ -25,6 +25,7 @@ namespace AbySalto.Mid.Domain.Business.Networking
         {
 
             StringBuilder sb = new StringBuilder();
+            sb.Append("?");
             args.ToList().ForEach((arg) =>
             {
                sb.Append($"{arg.Key}={arg.Value}&");

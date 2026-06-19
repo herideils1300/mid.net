@@ -1,5 +1,8 @@
-﻿using AbySalto.Mid.Application.Networking;
+﻿using AbySalto.Mid.Application.Interfaces.Networking;
+using AbySalto.Mid.Application.Products.Networking;
 using AbySalto.Mid.Domain.Business.Networking;
+using AbySalto.Mid.Domain.Data.DTO;
+using AbySalto.Mid.Domain.Data.Model;
 using Microsoft.Extensions.DependencyInjection;
 namespace AbySalto.Mid.Application
 {
@@ -7,8 +10,8 @@ namespace AbySalto.Mid.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<GetFilteredProductsClient>();
-            services.AddScoped<UriFactory>();
+            services.AddSingleton<IClient<ParamsModel, ProductDto[]>, GetFilteredProductsClient>();
+            services.AddSingleton<IClient<int, ProductDto>, GetProductByIdClient>();
             return services;
         }
     }

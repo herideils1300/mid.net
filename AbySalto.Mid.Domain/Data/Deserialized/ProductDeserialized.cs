@@ -8,7 +8,7 @@ namespace AbySalto.Mid.Domain.Data.Deserialized
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
-     public class ItemDeserialized
+     public class ProductDeserialized
     {
         public int id { get; set; }
         public string title { get; set; }
@@ -20,7 +20,7 @@ namespace AbySalto.Mid.Domain.Data.Deserialized
 
     public class Root
     {
-        public List<ItemDeserialized> products { get; set; }
+        public List<ProductDeserialized> products { get; set; }
         public int total { get; set; }
         public int skip { get; set; }
         public int limit { get; set; }

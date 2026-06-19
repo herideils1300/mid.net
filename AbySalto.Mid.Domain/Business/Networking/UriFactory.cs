@@ -20,7 +20,7 @@ namespace AbySalto.Mid.Domain.Business.Networking
     {
         private readonly IUriBuilder uriBuilder;
 
-        public UriFactory(string root, string path)
+        public UriFactory(string root)
         {
             this.uriBuilder = new UriBuilderImpl();
             this.uriBuilder.BuildProtocol(true);
@@ -28,11 +28,18 @@ namespace AbySalto.Mid.Domain.Business.Networking
 
         }
 
+        public string GetUriForSingleElement(int id)
+        {
+            this.uriBuilder.BuildPath($"/products/{id}");
+
+            return this.uriBuilder.ReturnFullUri();
+        }
+
         public string GetUriForPaginationAndSorting(int page, string sortBy, Order? sort)
         {
             this.uriBuilder.BuildPath("/products");
 
-            if(sort == null)
+            if (sort == null)
             {
                 sort = Order.Asc;
             }
@@ -41,7 +48,7 @@ namespace AbySalto.Mid.Domain.Business.Networking
             KeyValuePair<string, string>[] args = [
                     KeyValuePair.Create("limit", $"{numOfItemsPerPage}"),
                     KeyValuePair.Create("skip", $"{numOfItemsPerPage * page}"),
-                    KeyValuePair.Create("sortBY", sortBy),
+                    KeyValuePair.Create("sortBy", sortBy),
                     KeyValuePair.Create("order", (sort == Order.Asc) ? "asc" : "desc")
                 ];
 

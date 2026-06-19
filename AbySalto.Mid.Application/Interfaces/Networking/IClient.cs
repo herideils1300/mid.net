@@ -1,9 +1,9 @@
 ﻿using AbySalto.Mid.Domain.Data.Model;
 
-namespace AbySalto.Mid.Infrastructure.Outbound.Networking
+namespace AbySalto.Mid.Application.Interfaces.Networking
 {
-    public interface IClient<T>
+    public interface IClient<S, R>
     {
-        Task<T> SendWithResult(ParamsModel model);
+        Task<R> SendWithResult(S model);
     }
 }
